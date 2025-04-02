@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useMailbox } from "@/components/mailboxContext";
@@ -6,6 +6,7 @@ import { api } from "@/utils/api";
 import { ConversationList } from "../_components/conversationList";
 import { Header } from "../_components/header";
 import { TabBar } from "../_components/tabBar";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function InboxScreen() {
   const { selectedMailbox } = useMailbox();
@@ -34,6 +35,12 @@ export default function InboxScreen() {
     { id: "unassigned", label: "Unassigned" },
     { id: "conversations", label: "All" },
   ];
+
+  useFocusEffect(
+    useCallback(() => {
+      refetch();
+    }, [refetch]),
+  );
 
   const handleLoadMore = () => {
     if (hasNextPage && !isFetchingNextPage) {
